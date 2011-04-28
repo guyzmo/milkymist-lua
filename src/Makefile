@@ -9,14 +9,17 @@ PLAT= none
 
 CC= lm32-rtems4.11-gcc
 CFLAGS= -O2 -Wall $(MYCFLAGS)
-AR= ar rcu
-RANLIB= ranlib
+AR= lm32-rtems4.11-ar rcu
+RANLIB= lm32-rtems4.11-ranlib
 RM= rm -f
 LIBS= -lm $(MYLIBS)
+OBJCP= lm32-rtems4.11-objcopy
 
-MYCFLAGS=
+MYCFLAGS= 
 MYLDFLAGS=
 MYLIBS=
+
+RTEMS_INC=/opt/rtems-4.11/lm32-rtems4.11/milkymist/lib/include/
 
 # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
 
@@ -124,7 +127,8 @@ solaris:
 	$(MAKE) all MYCFLAGS="-DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-ldl"
 
 rtems:
-	$(MAKE) all MYCFLAGS=-DLUA_RTEMS MYLIBS="-lm -B$(RTEMS_MAKEFILE_PATH)/lib -specs bsp_specs -qrtems"
+	$(MAKE) all MYCFLAGS="-DLUA_RTEMS -I$(RTEMS_INC)" MYLIBS="-lm -B$(RTEMS_MAKEFILE_PATH)/lib -specs bsp_specs -qrtems"
+	$(OBJCP) -Obinary luam
 
 # list targets that do not create files (but not all makes understand .PHONY)
 .PHONY: all $(PLATS) default o a clean depend echo none

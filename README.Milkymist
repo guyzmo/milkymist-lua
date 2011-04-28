@@ -1,8 +1,7 @@
 Lua hacked port for the Milkymist board, move to  src/ and just type:
 
  git checkout milkymist
- make rtems
- lm32-rtems4.11-objcopy -Obinary luam
+ make rtems RTEMS_MAKEFILE_PATH=/opt/rtems-4.11/lm32-rtems4.11/milkymist RTEMS_INC=/opt/rtems-4.11/lm32-rtems4.11/milkymist/lib/include/
  ~/milkymist/tools/flterm --port /dev/ttyUSB0 --kernel luam
 
 
@@ -12,3 +11,7 @@ If you want see changes:
 
 Cristian Paul Peñaranda Rojas
  paul at kristianpaul dot org
+
+ * 2011 04 28 : Changes by : Bernard `Guyzmo` Pratz <guyzmo at hackable-devices dot org>
+    * added support for DMX and more drivers (thanks for lekernel's help and patience)
+    * improved Makefile with inclusion of objcopy
