@@ -17,6 +17,10 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
+#include <rtems.h>
+#include <bsp/milkymist_dmx.h>
+#include <bsp/milkymist_usbinput.h>
+
 
 
 static lua_State *globalL = NULL;
@@ -371,8 +375,8 @@ static int pmain (lua_State *L) {
     if (lua_stdin_is_tty()) {*/
       print_version();
       dotty(L);
- /*   }
-    else dofile(L, NULL);  /* executes stdin as a file */
+ //   }
+ //   else dofile(L, NULL);  // executes stdin as a file
  // }
   return 0;
 }
@@ -402,3 +406,34 @@ int main (int argc, char **argv) {
   return (status || s.status) ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
+rtems_task Init(rtems_task_argument argument) {
+    main(0,0);
+}
+
+#define CONFIGURE_APPLICATION_NEEDS_CLOCK_DRIVER
+#define CONFIGURE_APPLICATION_NEEDS_CONSOLE_DRIVER
+#define CONFIGURE_APPLICATION_NEEDS_FRAME_BUFFER_DRIVER
+#define CONFIGURE_APPLICATION_EXTRA_DRIVERS DMX_DRIVER_TABLE_ENTRY
+#define CONFIGURE_USE_IMFS_AS_BASE_FILESYSTEM
+
+#define CONFIGURE_EXECUTIVE_RAM_SIZE (16*1024*1024)
+
+#define CONFIGURE_LIBIO_MAXIMUM_FILE_DESCRIPTORS 32
+#define CONFIGURE_MAXIMUM_PTYS 4
+#define CONFIGURE_MAXIMUM_TASKS 32
+#define CONFIGURE_MAXIMUM_MESSAGE_QUEUES 16
+#define CONFIGURE_MAXIMUM_SEMAPHORES 32
+
+#define CONFIGURE_TICKS_PER_TIMESLICE 3
+#define CONFIGURE_MICROSECONDS_PER_TICK 10000
+
+#define CONFIGURE_RTEMS_INIT_TASKS_TABLE
+#define CONFIGURE_INIT_TASK_STACK_SIZE (1024*1024)
+#define CONFIGURE_INIT_TASK_PRIORITY 100
+#define CONFIGURE_INIT_TASK_ATTRIBUTES 0
+#define CONFIGURE_INIT_TASK_INITIAL_MODES \
+	(RTEMS_PREEMPT | RTEMS_NO_TIMESLICE | RTEMS_NO_ASR | \
+	RTEMS_INTERRUPT_LEVEL(0))
+
+#define CONFIGURE_INIT
+#include <rtems/confdefs.h>
