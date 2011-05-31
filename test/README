@@ -24,3 +24,5 @@ Here is a one-line summary of each program:
    trace-globals.lua	trace assigments to global variables
    xd.lua		hex dump
 
+   milkydmx.lua     example DMX functions to test milkymist's DMX features
+
